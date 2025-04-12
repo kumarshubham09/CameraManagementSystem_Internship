@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask NVR - Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: skyblue;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #4c4d4e;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .col-md-4 {
+            flex: 1 1 calc(33.333% - 20px);
+            max-width: calc(33.333% - 20px);
+        }
+
+        @media (max-width: 768px) {
+            .col-md-4 {
+                flex: 1 1 calc(50% - 20px);
+                max-width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .col-md-4 {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-4">
+    <h2 class="text-center">Dashboard</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Camera Management</a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('recordings') }}" class="btn btn-primary">Recordings</a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('settings') }}" class="btn btn-primary">Settings</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
