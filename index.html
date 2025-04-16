@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask NVR - Camera Management</title>
+    <!-- Commented out Bootstrap CSS -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+
+    <!-- Custom Modern CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: skyblue; /* Changed background color to skyblue */
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            color: #cf1010;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #4c4d4e;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #fff;
+        }
+
+        .btn-warning:hover {
+            background-color: #1d3d3a;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background-color: #c8dfc8;
+        }
+
+        .card {
+            background-color: #fff;
+            border: 10px solid #07060600;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .video-container {
+            position: relative;
+        }
+
+        .video-container img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .control-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-buttons .btn {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .col-md-4 {
+            flex: 1 1 calc(33.333% - 20px);
+            max-width: calc(33.333% - 20px);
+        }
+
+        @media (max-width: 768px) {
+            .col-md-4 {
+                flex: 1 1 calc(50% - 20px);
+                max-width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .col-md-4 {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-4">
+    <h2 class="text-center">Camera Management System</h2>
+    <a href="{{ url_for('add_camera') }}" class="btn btn-primary mb-3">Add Camera</a>
+
+    <!-- Notification Area -->
+    <div id="notification-area" class="alert alert-info d-none" role="alert">
+        <strong>Object Detected!</strong> Camera <span id="camera-number"></span> has detected an object.
+    </div>
+
+    <div class="row">
+        {% for camera in cameras %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body video-container">
+                    <h5 class="card-title">{{ camera.name }}</h5>
+                    <img id="camera-{{ camera.id }}" src="{{ url_for('video_feed', id=camera.id) }}" class="img-fluid">
+                    <div class="control-buttons">
+                        <button class="btn btn-sm btn-primary" onclick="toggleZoom('camera-{{ camera.id }}')">🔍 Zoom</button>
+                        <button class="btn btn-sm btn-dark" onclick="toggleFullscreen('camera-{{ camera.id }}')">⛶ Fullscreen</button>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{{ url_for('edit_camera', id=camera.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{{ url_for('delete_camera', id=camera.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function toggleZoom(id) {
+        let img = document.getElementById(id);
+        img.classList.toggle("Zoomed");
+    }
+
+    function toggleFullscreen(id) {
+        let img = document.getElementById(id);
+        if (!document.fullscreenElement) {
+            img.requestFullscreen().catch(err => {
+                console.log(`Error attempting fullscreen: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    // Function to show notification for object detection
+    function showNotification(cameraId) {
+        const notificationArea = document.getElementById('notification-area');
+        const cameraNumber = document.getElementById('camera-number');
+        cameraNumber.textContent = cameraId;
+        notificationArea.classList.remove('d-none');
+
+        // Hide notification after 5 seconds
+        setTimeout(() => {
+            notificationArea.classList.add('d-none');
+        }, 5000);
+    }
+
+    // Example: Simulate object detection for camera 1
+    // This should be replaced with actual detection logic
+    setTimeout(() => {
+        showNotification(1);
+    }, 3000);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
