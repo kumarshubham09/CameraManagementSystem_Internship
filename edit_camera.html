@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Camera</title>
+    <style>
+        /* Custom CSS */
+        body {
+            background-color: #566a6d;
+            font-family: 'Roboto', Arial, sans-serif;
+            color: #f5f5f5f1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            padding: 20px;
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            font-size: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #e6dcdc;
+        }
+        .form-label {
+            font-size: 14px;
+            color: #745e5e;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            font-size: 20px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #333;
+            color: #f5f5f5;
+            margin-bottom: 15px;;
+            box-sizing: border-box;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        .btn {
+            padding: 10px 15px;
+            font-size: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-warning {
+            background-color: #022c33;
+            color: #333;
+        }
+        .btn-warning:hover {
+            background-color: #e0a800;
+            transform: scale(1.05);
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: whitesmoke;
+            margin-left: 10px;
+        }
+        .btn-secondary:hover {
+            background-color: #1976a8;
+            transform: scale(1.05);
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Edit Camera</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Camera Name</label>
+            <input type="text" class="form-control" name="name" value="{{ camera.name }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">RTSP URL</label>
+            <input type="text" class="form-control" name="rtsp_url" value="{{ camera.rtsp_url }}" required>
+        </div>
+        <button type="submit" class="btn btn-warning">Update Camera</button>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+
+</body>
+</html>
